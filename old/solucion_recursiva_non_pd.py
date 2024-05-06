@@ -54,8 +54,8 @@ input = [
 investigadores = [Investigador(i[0], i[1], i[2]) for i in input]
 viaje = Viaje()
 
-capacidad = 4
-peso = 500
+capacidad = 5
+peso = 1000
 
 ans = opt(investigadores, len(investigadores) - 1, peso, capacidad, viaje)
 

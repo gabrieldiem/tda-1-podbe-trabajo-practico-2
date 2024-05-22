@@ -36,7 +36,7 @@ El código se encuentra en el `ej_2.py`. Además de tener Python instalado se re
 python -m pip install pulp
 ```
 
-El código requiere un archivo de tipo CSV que tenga la siguiente estructura, donde cada actor tiene asignado su subconjunto de papeles con las respectivas potencialidades:
+El código requiere un archivo de tipo CSV que tenga la siguiente estructura, donde cada actor tiene asignado su subconjunto de papeles con las respectivas ganancias:
 
 ```csv
 Nombre de actor, id papel 1, ganancia papel 1, id papel 2, ganancia papel 2
@@ -51,4 +51,4 @@ python ./ej_2.py ./ej_2_test_files/1.csv
 
 O también se puede iniciar el script sin argumentos y por entrada estándar escribir el nombre/ubicación del archivo.
 
-Se imprimirá por pantalla la asignación que maximice la potencialidad del problema.
+Se imprimirá por pantalla la asignación que maximice la potencialidad del problema si se encuentra una solución óptima.

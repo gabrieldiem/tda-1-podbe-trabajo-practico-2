@@ -161,7 +161,7 @@ if __name__ == "__main__":
         filename = sys.argv[1]
         _cantidadMaximaPersonas = int(sys.argv[2])
         _pesoMaximo = int(sys.argv[3])
-        print(filename, _cantidadMaximaPersonas, _pesoMaximo)
+
         gananciaFinal, pesoFinal, investigadoresElegidos = main(
             filename, _cantidadMaximaPersonas, _pesoMaximo
         )

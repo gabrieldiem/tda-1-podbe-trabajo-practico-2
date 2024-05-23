@@ -21,45 +21,30 @@ def leerArchivoActores(filename):
     return actores, papeles
 
 
+# Función para obtener el valor que sigue a un número dado
+def obtener_valor(dado, lista):
+    return next((valor for clave, valor in lista if clave == dado), 0)
+
+
 def resolverAsignacion(actores, papeles):
     # Definimos el problema de programación lineal(PL)
-    problema = pulp.LpProblem("AsignarActores", pulp.LpMaximize)
+    problema = pulp.LpProblem("MaximizarPotencialesEspectadores", pulp.LpMaximize)
 
     # Definimos nuestras variables de decisión
-    decisiones = pulp.LpVariable.dicts(
-        "x",
-        ((actor, papel) for actor in actores for papel, _ in actores[actor]),
-        cat="Binary",
-    )
+    decisiones = pulp.LpVariable.dicts("x",
+                                       (list(actores.keys()), list(papeles)),
+                                       cat='Binary')
 
     # Definimos maximizar la potencialidad total
-    problema += pulp.lpSum(
-        [
-            potencialidad * decisiones[(actor, papel)]
-            for actor in actores
-            for papel, potencialidad in actores[actor]
-        ]
-    )
+    problema += pulp.lpSum(obtener_valor(p, actores[a]) * decisiones[a][p] for a in actores for p in papeles), "Total_de_Espectadores"
 
     # Cada actor puede ser asignado a lo sumo a un papel(Restricción [1])
-    for actor in actores:
-        problema += (
-            pulp.lpSum([decisiones[(actor, papel)] for papel, _ in actores[actor]])
-            <= 1,
-            f"UnPapelPorActor_{actor}",
-        )
+    for a in list(actores.keys()):
+        problema += pulp.lpSum(decisiones[a][p] for p in papeles) <= 1, f"Actor_{a}_max_un_papel"
 
     # Cada papel puede ser asignado a lo sumo a un actor(Restricción[2])
-    for papel in papeles:
-        problema += (
-            pulp.lpSum(
-                [decisiones(actor, papel)]
-                for actor in actores
-                if (papel, actor) in actores[actor]
-            )
-            <= 1,
-            f"UnActorPorPapel_{papel}",
-        )
+    for p in papeles:
+        problema += pulp.lpSum(decisiones[a][p] for a in actores) <= 1, f"Papel_{p}_max_un_actor"
 
     problema.solve()
 
@@ -79,7 +64,7 @@ def imprimirResultados(haySolucionOptima, actores, decisiones):
     potencialidad_total = 0
     for actor in actores:
         for papel, potencialidad in actores[actor]:
-            if pulp.value(decisiones[(actor, papel)]) == 1:
+            if pulp.value(decisiones[actor][papel]) == 1:
                 print(
                     f"Actor: [{actor}] asignado al papel [{papel}] con potencialidad: [{potencialidad}]"
                 )
